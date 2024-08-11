@@ -12,3 +12,9 @@ spring:
   h2:
     console:
       enabled: true
+
+server:
+  servlet:
+    encoding:
+      # 테스트 코드에서 html 코드에 있는 한글이 깨지지 않게 HTTP 응답의 문자 인코딩을 강제로 설정
+      force-response: true
