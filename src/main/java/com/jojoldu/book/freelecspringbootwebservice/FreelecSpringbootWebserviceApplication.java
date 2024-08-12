@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
-@EnableJpaAuditing      // jpa auditing 활성화
+// @EnableJpaAuditing 삭제됨 <- 테스트 코드에서 `IllegalArgumentException: At least one JPA metamodel must be present!` 발생
 @SpringBootApplication
 public class FreelecSpringbootWebserviceApplication {
 
