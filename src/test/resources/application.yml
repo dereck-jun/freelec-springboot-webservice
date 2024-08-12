@@ -1,13 +1,5 @@
 spring:
-  datasource:
-    # `USER`가 예약어이기 때문에 에러 발생. 예약어가 아니라는 구문을 추가
-    url: jdbc:h2:mem:testdb;NON_KEYWORDS=USER
-    username: sa
-
   jpa:
-    hibernate:
-      ddl-auto: create-drop
-
     show-sql: true
 
   h2:
@@ -17,9 +9,17 @@ spring:
   session:
     store-type: jdbc
 
-
-  profiles:
-    include: oauth
+  # Test OAuth
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: test
+            client-secret: test
+            scope:
+              - profile
+              - email
 
 server:
   servlet:

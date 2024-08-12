@@ -1,21 +1,32 @@
 package com.jojoldu.book.freelecspringbootwebservice.web;
 
+import com.jojoldu.book.freelecspringbootwebservice.config.auth.SecurityConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(controllers = HelloController.class)    // 선언할 경우 @Controller, @ControllerAdvice 등을 사용할 수 있음. 단, @Repository, @Service, @Component 등은 안됨
+// @WebMvcTest: 선언할 경우 @Controller, @ControllerAdvice 등을 사용할 수 있음. 단, @Repository, @Service, @Component 등은 안됨
+@WebMvcTest(
+        controllers = HelloController.class,
+        excludeFilters = {
+                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class)
+        }
+)
 class HelloControllerTest {
 
     @Autowired
     private MockMvc mvc;    // 웹 API를 테스트할 때 사용. Spring Mvc 테스트의 시작점. 해당 클래스로 GET,POST 등에 대한 API 테스트를 할 수 있음
 
     @Test
+    @WithMockUser(roles = "USER")
     void hello가_리턴된다() throws Exception {
         String hello = "hello";
 
@@ -30,18 +41,19 @@ class HelloControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "USER")
     void helloDto가_리턴된다() throws Exception {
         String name = "hello";
         int amount = 1000;
 
         mvc.perform(
-            get("/hello/dto")
-                .param("name", name)
-                .param("amount", String.valueOf(amount))
-        )
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.name").value(name))
-        .andExpect(jsonPath("$.amount").value(amount));
+                        get("/hello/dto")
+                                .param("name", name)
+                                .param("amount", String.valueOf(amount))
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value(name))
+                .andExpect(jsonPath("$.amount").value(amount));
     }
 
 
